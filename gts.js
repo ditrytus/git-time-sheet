@@ -5,6 +5,7 @@ var moment = require('moment');
 var stringify = require('csv-stringify');
 var fs = require('fs');
 
+
 var author = "Jakub";
 var limit = 200;
 var repository = "C:\\Users\\Jakub_admin\\Documents\\srw";
@@ -13,11 +14,6 @@ var endDate = moment("2018-02-28").endOf('day');
 var workingHoursStart = moment("09:20", 'HH:mm');
 var workingHoursEnd = moment("17:20", 'HH:mm');
 var outputFile = "out.csv"
-
-if (!shell.which('git')) {
-    shell.echo('Sorry, this script requires git');
-    shell.exit(1);
-}
 
 var command = "git log --no-walk -" + limit.toString() + " --author-date-order --author=\"" + author + "\" --pretty=format:\"%H;%an;%aI;%s'\"";
 
