@@ -9,6 +9,7 @@
   "author": "Jakub Gruszecki",
   "license": "ISC",
   "dependencies": {
+    "argparse": "^1.0.10",
     "csv": "^2.0.0",
     "linq": "^3.0.9",
     "moment": "^2.21.0",
