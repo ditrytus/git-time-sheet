@@ -1,0 +1,17 @@
+{
+  "name": "git-time-sheet",
+  "version": "1.0.0",
+  "description": "Creates time sheet from git repository",
+  "main": "gts.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jakub Gruszecki",
+  "license": "ISC",
+  "dependencies": {
+    "csv": "^2.0.0",
+    "linq": "^3.0.9",
+    "moment": "^2.21.0",
+    "shelljs": "^0.8.1"
+  }
+}
