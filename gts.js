@@ -75,15 +75,12 @@ parser.addArgument(
 var args = parser.parseArgs();
 
 var workingDirectory = shell.pwd().stdout;
-console.log(workingDirectory);
 
 if (!args.repository) args.repository = workingDirectory;
-console.log(args.repository);
 
 var selectedPeriod = moment().add(args.periodNumber, args.period);
 var startDate = selectedPeriod.clone().startOf(args.period);
 var endDate = selectedPeriod.clone().endOf(args.period);
-console.log(startDate.toISOString() + " - " + endDate.toISOString());
 
 var workingHoursStart = moment(args.workingDayStart, 'HH:mm');
 
