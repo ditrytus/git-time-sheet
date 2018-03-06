@@ -16,6 +16,14 @@ var parser = new ArgumentParser({
 });
 
 parser.addArgument(
+    [ '-r', '--repository' ],
+    {
+      help: "Path to a folder with git repository. Default: working directory.",
+      defaultValue: undefined
+    }
+  );
+
+parser.addArgument(
   [ '-a', '--author' ],
   {
     help: 'Author of commits. Only commits which author contains this value will be included.',
@@ -59,29 +67,30 @@ parser.addArgument(
 parser.addArgument(
     [ '-o', '--output' ],
     {
-      help: "Output CSV file name (with extension). DefauktL out.csv.",
+      help: "Output CSV file name (with extension). Default: out.csv.",
       defaultValue: 'out.csv'
     }
 );
 
 var args = parser.parseArgs();
 
+var workingDirectory = shell.pwd().stdout;
+console.log(workingDirectory);
 
-//var author = "Jakub";
-var limit = 200;
-var repository = "C:\\Users\\Jakub_admin\\Documents\\srw";
-var startDate = moment("2018-02-01").startOf('day');
-var endDate = moment("2018-02-28").endOf('day');
-var workingHoursStart = moment("09:20", 'HH:mm');
-var workingHoursEnd = moment("17:20", 'HH:mm');
-var outputFile = "out.csv"
+if (!args.repository) args.repository = workingDirectory;
+console.log(args.repository);
 
-var command = "git log --no-walk -" + limit.toString() + " --author-date-order --author=\"" + args.author + "\" --pretty=format:\"%H;%an;%aI;%s'\"";
+var selectedPeriod = moment().add(args.periodNumber, args.period);
+var startDate = selectedPeriod.clone().startOf(args.period);
+var endDate = selectedPeriod.clone().endOf(args.period);
+console.log(startDate.toISOString() + " - " + endDate.toISOString());
 
-var workingDirectory = shell.pwd();
+var workingHoursStart = moment(args.workingDayStart, 'HH:mm');
+
+var command = "git log --no-walk -" + args.limit.toString() + " --author-date-order --author=\"" + args.author + "\" --pretty=format:\"%H;%an;%aI;%s'\"";
 
 var out = shell
-    .cd(repository)
+    .cd(args.repository)
     .exec(
         command,
         {silent:true})
@@ -157,11 +166,15 @@ function processLog(arrays)
             return e;
         })
         .selectMany(e => e)
+        .select(e => {
+            e.time = e.time.format("YYYY-MM-DD HH:mm:ss");
+            return e;
+        })
         .toArray();
 
     stringify(records, {delimiter: ';'}, function(err, output){
         shell.cd(workingDirectory);
-        fs.writeFile(outputFile, output, (err) => {
+        fs.writeFile(args.output, output, (err) => {
             if (err) console.error(err);
         });
     });
