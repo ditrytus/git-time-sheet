@@ -84,7 +84,7 @@ var endDate = selectedPeriod.clone().endOf(args.period);
 
 var workingHoursStart = moment(args.workingDayStart, 'HH:mm');
 
-var command = "git log --no-walk -" + args.limit.toString() + " --author-date-order --author=\"" + args.author + "\" --pretty=format:\"%H;%an;%aI;%s'\"";
+var command = "git log --no-walk -" + args.limit.toString() + " --author-date-order --author=\"" + args.author + "\" --pretty=format:\"%H;%an;%aI;%s\"";
 
 var out = shell
     .cd(args.repository)
@@ -93,10 +93,15 @@ var out = shell
         {silent:true})
     .stdout;
 
+out = out.replace("\"","").replace("\"","")
+
 parse(
     out,
     {delimiter: ';', auto_parse: true},
-    (err, output) => processLog(output));
+    (err, output) => {
+        if (err) console.log(err);
+        processLog(output)
+    });
 
 function processLog(arrays)
 {
